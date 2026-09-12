@@ -1,6 +1,4 @@
 import Card from "@/components/Card";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
 
 const products = [
   {
@@ -31,19 +29,15 @@ const products = [
 
 export default function Home() {
   return (
-    <>
-      <Navbar cartCount={2} />
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-10">
-        <h1 className="text-heading-3 text-dark-900 sm:text-heading-2">
-          Latest shoes
-        </h1>
-        <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {products.map((product) => (
-            <Card key={product.title} href="#" {...product} />
-          ))}
-        </div>
-      </main>
-      <Footer />
-    </>
+    <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-10">
+      <h1 className="text-heading-3 text-dark-900 sm:text-heading-2">
+        Latest shoes
+      </h1>
+      <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {products.map((product) => (
+          <Card key={product.title} href="#" {...product} />
+        ))}
+      </div>
+    </main>
   );
 }
