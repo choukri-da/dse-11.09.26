@@ -36,10 +36,10 @@ npm run dev
 
 ## Structure
 
-- `src/db/schema.ts` — Drizzle schema: `products` plus the Better Auth tables
-- `src/db/index.ts` — Drizzle client over the Neon serverless driver
-- `src/db/seed.ts` — sample Nike products
+- `src/lib/db/schema/` — Modular Drizzle schema for products, Better Auth, and guest sessions
+- `src/lib/db/index.ts` — Drizzle client over the Neon serverless driver
+- `src/lib/db/seed.ts` — sample Nike products
 - `src/lib/auth.ts` — Better Auth server instance (Drizzle adapter, email + password)
 - `src/app/api/auth/[...all]/route.ts` — Better Auth route handler
 - `src/store/cart.ts` — Zustand cart store, persisted to local storage
-- `src/app/page.tsx` — server component listing products from the database
+- `src/app/(root)/page.tsx` — server component listing products from the database
