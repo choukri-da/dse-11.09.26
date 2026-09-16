@@ -8,13 +8,22 @@ export const metadata: Metadata = {
   description: "Sign in to your Nike account",
 };
 
-export default function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ redirect?: string }>;
+}) {
+  const { redirect } = await searchParams;
+  const redirectQuery = redirect
+    ? `?redirect=${encodeURIComponent(redirect)}`
+    : "";
+
   return (
     <section className="flex flex-col gap-8">
       <p className="text-caption text-dark-700 sm:text-center">
         Don&apos;t have an account?{" "}
         <Link
-          href="/sign-up"
+          href={`/sign-up${redirectQuery}`}
           className="text-dark-900 underline underline-offset-4 hover:text-dark-700"
         >
           Sign Up
@@ -38,7 +47,7 @@ export default function SignInPage() {
         <span className="h-px flex-1 bg-light-300" />
       </div>
 
-      <AuthForm mode="sign-in" />
+      <AuthForm mode="sign-in" redirectTo={redirect} />
 
       <p className="text-center text-footnote text-dark-700">
         By signing in, you agree to our{" "}

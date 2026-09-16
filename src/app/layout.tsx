@@ -12,7 +12,11 @@ export const metadata: Metadata = {
   description: "Nike products rendered from Neon Postgres with Drizzle ORM",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="en"
