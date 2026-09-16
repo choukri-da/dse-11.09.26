@@ -1,20 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
+
+import { signIn, signUp } from "@/lib/auth/actions";
 
 export interface AuthFormProps {
   mode: "sign-in" | "sign-up";
+  redirectTo?: string;
 }
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, redirectTo }: AuthFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const isSignUp = mode === "sign-up";
+  const [state, formAction, isPending] = useActionState(
+    isSignUp ? signUp : signIn,
+    null,
+  );
 
   const inputClass =
     "w-full rounded-xl border border-light-300 bg-light-100 px-4 py-3 text-body text-dark-900 placeholder:text-dark-500 focus:border-dark-900 focus:outline-none";
 
   return (
-    <form className="flex flex-col gap-5" noValidate>
+    <form action={formAction} className="flex flex-col gap-5" noValidate>
+      <input type="hidden" name="redirectTo" value={redirectTo ?? ""} />
       {isSignUp && (
         <div className="flex flex-col gap-2">
           <label htmlFor="name" className="text-caption text-dark-900">
@@ -29,6 +37,11 @@ export function AuthForm({ mode }: AuthFormProps) {
             placeholder="Enter your full name"
             className={inputClass}
           />
+          {state && "fieldErrors" in state && state.fieldErrors?.name?.[0] ? (
+            <p className="text-footnote text-red">
+              {state.fieldErrors.name[0]}
+            </p>
+          ) : null}
         </div>
       )}
 
@@ -45,6 +58,9 @@ export function AuthForm({ mode }: AuthFormProps) {
           placeholder="johndoe@gmail.com"
           className={inputClass}
         />
+        {state && "fieldErrors" in state && state.fieldErrors?.email?.[0] ? (
+          <p className="text-footnote text-red">{state.fieldErrors.email[0]}</p>
+        ) : null}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -91,6 +107,11 @@ export function AuthForm({ mode }: AuthFormProps) {
             Use at least 8 characters.
           </p>
         )}
+        {state && "fieldErrors" in state && state.fieldErrors?.password?.[0] ? (
+          <p className="text-footnote text-red">
+            {state.fieldErrors.password[0]}
+          </p>
+        ) : null}
       </div>
 
       {!isSignUp && (
@@ -112,11 +133,24 @@ export function AuthForm({ mode }: AuthFormProps) {
         </div>
       )}
 
+      {state && "error" in state && state.error ? (
+        <p role="alert" className="text-footnote text-red">
+          {state.error}
+        </p>
+      ) : null}
+
       <button
         type="submit"
+        disabled={isPending}
         className="w-full rounded-full bg-dark-900 px-6 py-4 text-body-medium text-light-100 transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-900"
       >
-        {isSignUp ? "Sign Up" : "Sign In"}
+        {isPending
+          ? isSignUp
+            ? "Creating account…"
+            : "Signing in…"
+          : isSignUp
+            ? "Sign Up"
+            : "Sign In"}
       </button>
     </form>
   );
