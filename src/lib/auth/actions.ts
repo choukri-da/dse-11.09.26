@@ -95,8 +95,10 @@ export async function signIn(
   }
 
   const { email, password, redirectTo } = parsed.data;
+  let response: Awaited<ReturnType<typeof auth.api.signInEmail>>;
+
   try {
-    await auth.api.signInEmail({
+    response = await auth.api.signInEmail({
       body: { email, password },
       headers: await headers(),
     });
@@ -112,6 +114,7 @@ export async function signIn(
     return { ok: false, error: "Invalid email or password." };
   }
 
+  await mergeGuestCartWithUserCart(response.user.id);
   redirect(redirectTo ?? "/");
 }
 
