@@ -22,6 +22,7 @@ export const signInSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   redirectTo: redirectToSchema,
+  remember: z.literal("on").optional().transform((value) => value === "on"),
 });
 
 export type SignUpInput = z.infer<typeof signUpSchema>;

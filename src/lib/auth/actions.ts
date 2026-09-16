@@ -1,7 +1,7 @@
 "use server";
 
 import { APIError } from "better-auth/api";
-import { eq } from "drizzle-orm";
+import { eq, lte } from "drizzle-orm";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -94,12 +94,12 @@ export async function signIn(
     };
   }
 
-  const { email, password, redirectTo } = parsed.data;
+  const { email, password, redirectTo, remember } = parsed.data;
   let response: Awaited<ReturnType<typeof auth.api.signInEmail>>;
 
   try {
     response = await auth.api.signInEmail({
-      body: { email, password },
+      body: { email, password, rememberMe: remember },
       headers: await headers(),
     });
   } catch (error) {
@@ -147,12 +147,22 @@ export async function guestSession(): Promise<Guest | null> {
   return session;
 }
 
-export async function createGuestSession(): Promise<{ sessionToken: string }> {
+export async function createGuestSession(): Promise<{
+  sessionToken: string;
+} | null> {
+  const authSession = await auth.api.getSession({ headers: await headers() });
+
+  if (authSession) {
+    return null;
+  }
+
   const existingSession = await guestSession();
 
   if (existingSession) {
     return { sessionToken: existingSession.sessionToken };
   }
+
+  await db.delete(guest).where(lte(guest.expiresAt, new Date()));
 
   const sessionToken = crypto.randomUUID();
   await db.insert(guest).values({

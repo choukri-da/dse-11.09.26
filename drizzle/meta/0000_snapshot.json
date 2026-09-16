@@ -1,5 +1,5 @@
 {
-  "id": "aafc7609-a38a-4c7d-bae5-f1c2a962b29e",
+  "id": "5b369845-b292-4682-8700-d90b2e7cd173",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -396,7 +396,23 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "guest_expires_at_idx": {
+          "name": "guest_expires_at_idx",
+          "columns": [
+            {
+              "expression": "expires_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
