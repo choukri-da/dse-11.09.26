@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function SignInPage() {
   return (
     <section className="flex flex-col gap-8">
-      <p className="text-caption text-dark-700 sm:text-right">
+      <p className="text-caption text-dark-700 sm:text-center">
         Don&apos;t have an account?{" "}
         <Link
           href="/sign-up"
